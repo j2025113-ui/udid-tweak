@@ -12,26 +12,23 @@ jobs:
 
       - name: Install Theos
         run: |
-          set -x
           export THEOS=~/theos
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)" || true
-          ls ~/theos || echo "Theos not found"
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
 
       - name: Build dylib
         run: |
-          set -x
           export THEOS=~/theos
           export PATH=$THEOS/bin:$PATH
-          make 2>&1 || true
+          make
 
-      - name: List output files
+      - name: Find dylib
         run: |
-          find . -name "*.dylib" 2>/dev/null || echo "No dylib found"
-          find .theos -type f 2>/dev/null || echo "No .theos folder"
+          find . -name "*.dylib" 2>/dev/null
+          find .theos -type f 2>/dev/null
 
       - name: Upload dylib
         uses: actions/upload-artifact@v4
         with:
           name: UDIDAuth-dylib
-          path: .theos/obj/debug/UDIDAuth.dylib
+          path: .theos/obj/UDIDAuth.dylib
           if-no-files-found: warn
