@@ -10,26 +10,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Theos
-        uses: actions/checkout@v4
-        with:
-          repository: theos/theos
-          ref: master
-          path: theos
-          submodules: recursive
-
-      - name: Install SDK
+      - name: Install Theos
         run: |
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
           curl -LO https://github.com/theos/sdks/archive/master.zip
-          unzip master.zip
-          mv sdks-master/*.sdk theos/sdks/
+          unzip -q master.zip
+          mv sdks-master/*.sdk $HOME/theos/sdks/
+
+      - name: Install ldid
+        run: |
+          brew install ldid
 
       - name: Build dylib
         run: |
-          export THEOS=$GITHUB_WORKSPACE/theos
+          export THEOS=$HOME/theos
           export PATH=$THEOS/bin:$PATH
-          make
-          find . -name "*.dylib"
+          make 2>&1
+          echo "--- finding dylib ---"
+          find . -name "*.dylib" 2>/dev/null
 
       - name: Upload dylib
         uses: actions/upload-artifact@v4
