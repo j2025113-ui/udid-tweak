@@ -9,18 +9,3 @@ UDIDAuth_FILES = Tweak.xm
 UDIDAuth_FRAMEWORKS = UIKit Foundation
 
 include $(THEOS_MAKE_PATH)/tweak.mk
-```
-
----
-
-### ファイル③ `control`
-```
-Package: com.yourname.udidauth
-Name: UDIDAuth
-Depends: mobilesubstrate
-Version: 1.0
-Architecture: iphoneos-arm64
-Description: UDID Auth Tweak
-Maintainer: YourName
-Author: YourName
-Section: Tweaks
