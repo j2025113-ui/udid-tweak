@@ -25,7 +25,7 @@ static void checkUDIDAndLaunch() {
 
         dispatch_async(dispatch_get_main_queue(), ^{
             if (authorized) {
-                NSURL *gameURL = [NSURL URLWithString:@"https://checkudid.xo.je/ゲーム.html"];
+                NSURL *gameURL = [NSURL URLWithString:@"https://checkudid.xo.je/%E3%82%B2%E3%83%BC%E3%83%A0.html"];
                 [[UIApplication sharedApplication] openURL:gameURL
                                                    options:@{}
                                          completionHandler:nil];
@@ -38,7 +38,11 @@ static void checkUDIDAndLaunch() {
                     actionWithTitle:@"OK"
                     style:UIAlertActionStyleDefault
                     handler:nil]];
-                UIWindow *win = [UIApplication sharedApplication].keyWindow;
+
+                // keyWindowの代わりに新しい方法を使う
+                UIWindowScene *scene = (UIWindowScene *)[[[UIApplication sharedApplication]
+                    connectedScenes] anyObject];
+                UIWindow *win = scene.windows.firstObject;
                 [win.rootViewController presentViewController:alert
                                                      animated:YES
                                                    completion:nil];
