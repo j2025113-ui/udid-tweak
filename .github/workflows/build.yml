@@ -10,25 +10,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Theos
+      - name: Setup Theos
+        uses: actions/checkout@v4
+        with:
+          repository: theos/theos
+          ref: master
+          path: theos
+          submodules: recursive
+
+      - name: Install SDK
         run: |
-          export THEOS=~/theos
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          curl -LO https://github.com/theos/sdks/archive/master.zip
+          unzip master.zip
+          mv sdks-master/*.sdk theos/sdks/
 
       - name: Build dylib
         run: |
-          export THEOS=~/theos
+          export THEOS=$GITHUB_WORKSPACE/theos
           export PATH=$THEOS/bin:$PATH
           make
-
-      - name: Find dylib
-        run: |
-          find . -name "*.dylib" 2>/dev/null
-          find .theos -type f 2>/dev/null
+          find . -name "*.dylib"
 
       - name: Upload dylib
         uses: actions/upload-artifact@v4
         with:
           name: UDIDAuth-dylib
-          path: .theos/obj/UDIDAuth.dylib
+          path: .theos/obj/debug/*.dylib
           if-no-files-found: warn
